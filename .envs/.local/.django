@@ -13,3 +13,7 @@ CELERY_BROKER_URL=redis://redis:6379/0
 # Flower
 CELERY_FLOWER_USER=LAIaJxRAajmRXYGSHsMOhLNEWKoQceMW
 CELERY_FLOWER_PASSWORD=6xQjsZN5iyWsQdocucIjBcxY0Ygj5iWjpAXoR93hQwvBVBTSzZnxDLz9xcy93JKl
+
+
+DJANGO_EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+DEFAULT_FROM_EMAIL=noreply@hirethon.local
