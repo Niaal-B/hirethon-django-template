@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from users.utils import send_verification_email  
 
 from hirethon_template.users.models import User as UserType
 
@@ -35,19 +35,23 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        validated_data.pop('password2') 
+        validated_data.pop('password2')
         user = User.objects.create_user(
             email=validated_data['email'],
             name=validated_data.get('name', ''),
             password=validated_data['password1']
         )
+        user.is_active = False  
+        user.save()
+
+        request = self.context.get('request')
+        send_verification_email(user, request) 
+
         return user
 
     def to_representation(self, instance):
-        refresh = RefreshToken.for_user(instance)
         return {
             'user_id': instance.id,
             'email': instance.email,
-            'access': str(refresh.access_token),
-            'refresh': str(refresh),
+            'message': 'Verification email sent. Please check your inbox.'
         }
