@@ -337,7 +337,7 @@ REST_FRAMEWORK = {
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
-CORS_URLS_REGEX = r"^/api/.*$"
+CORS_URLS_REGEX = r"^/.*$"
 
 # By Default swagger ui is available only to admin user(s). You can change permission classes to change that
 # See more configuration options at https://drf-spectacular.readthedocs.io/en/latest/settings.html#settings
@@ -376,7 +376,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://staging.app.hirethon_template.com",
     "https://app.hirethon_template.com",
     "https://*.hirethon_template.com",
-    "http://localhost:3000", 
+    "http://localhost:5173", 
 
 ]
 
