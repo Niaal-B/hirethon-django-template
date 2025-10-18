@@ -17,3 +17,11 @@ CELERY_FLOWER_PASSWORD=6xQjsZN5iyWsQdocucIjBcxY0Ygj5iWjpAXoR93hQwvBVBTSzZnxDLz9x
 
 DJANGO_EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
 DEFAULT_FROM_EMAIL=noreply@hirethon.local
+
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=nihnihal504@gmail.com
+EMAIL_HOST_PASSWORD=hpfn ekbh dsys kych
+DEFAULT_FROM_EMAIL=nihnihal504@gmail.com
+

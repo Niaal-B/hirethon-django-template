@@ -7,7 +7,11 @@ from rest_framework.viewsets import GenericViewSet
 
 from .serializers import UserSerializer
 from rest_framework import generics
-from hirethon_template.users.api.serializers import RegisterSerializer
+from hirethon_template.users.api.serializers import RegisterSerializer,EmailVerificationSerializer
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+from rest_framework.views import APIView
+from drf_spectacular.utils import extend_schema
 
 User = get_user_model()
 
@@ -29,3 +33,22 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
+
+@extend_schema(request=EmailVerificationSerializer)
+class VerifyEmailView(APIView):
+    def post(self, request):
+        uid = request.data.get('uid')
+        token = request.data.get('token')
+
+        try:
+            user_id = urlsafe_base64_decode(uid).decode()
+            user = User.objects.get(pk=user_id)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return Response({"error": "Invalid link"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+            return Response({"message": "Email verified successfully"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
