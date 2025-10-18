@@ -193,6 +193,8 @@ TEMPLATES = [
     }
 ]
 
+
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#form-renderer
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
@@ -374,6 +376,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://staging.app.hirethon_template.com",
     "https://app.hirethon_template.com",
     "https://*.hirethon_template.com",
+    "http://localhost:3000", 
+
 ]
 
 CORS_ALLOW_CREDENTIALS = True
