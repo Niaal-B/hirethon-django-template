@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class DashboardConfig(AppConfig):
+class OrganizationConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = 'hirethon_template.dashboard'
+    name = "Organization"

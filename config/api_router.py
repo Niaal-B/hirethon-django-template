@@ -1,3 +1,4 @@
+from django.urls import include, path
 from django.conf import settings
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
@@ -10,6 +11,9 @@ else:
 
 router.register("users", UserViewSet)
 
-
 app_name = "api"
-urlpatterns = router.urls
+
+urlpatterns = [
+    path("", include(router.urls)),
+    path("dashboard/", include("hirethon_template.dashboard.api.urls")),
+]
