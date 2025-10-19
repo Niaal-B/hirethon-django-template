@@ -16,4 +16,5 @@ app_name = "api"
 urlpatterns = [
     path("", include(router.urls)),
     path("dashboard/", include("hirethon_template.dashboard.api.urls")),
+    path("organizations/", include("hirethon_template.Organization.urls")),
 ]
