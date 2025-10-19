@@ -88,6 +88,8 @@ LOCAL_APPS = [
     "hirethon_template.users",
     'hirethon_template.dashboard',
     'hirethon_template.Organization',
+    'hirethon_template.shortner',
+
 
     # Your stuff: custom apps go here
 ]
