@@ -7,6 +7,7 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
+from hirethon_template.shortner.views import redirect_view
 
 # Customize admin site
 admin.site.site_header = settings.ADMIN_SITE_HEADER
@@ -39,6 +40,7 @@ urlpatterns += [
     ),
     path('rest-auth/', include('dj_rest_auth.urls')),
     path('rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+    path("<slug:org_slug>/<str:slug>/", redirect_view, name="redirect"), 
 ]
 
 if settings.DEBUG:

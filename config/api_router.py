@@ -17,4 +17,8 @@ urlpatterns = [
     path("", include(router.urls)),
     path("dashboard/", include("hirethon_template.dashboard.api.urls")),
     path("organizations/", include("hirethon_template.Organization.urls")),
+    path("urls/", include("hirethon_template.shortner.urls")),
+    path("invitations/", include("hirethon_template.invitation.urls")),
+
+
 ]

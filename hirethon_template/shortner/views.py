@@ -49,7 +49,7 @@ class CreateShortURLView(APIView):
         return Response({
             "id": short_url.id,
             "slug": short_url.slug,
-            "short_url": f"https://yourdomain.com/{org.slug}/{short_url.slug}",
+            "short_url": f"https://loca.com/{org.slug}/{short_url.slug}",
             "original_url": short_url.original_url,
             "clicks": short_url.clicks,
             "created_at": short_url.created_at,
@@ -73,4 +73,107 @@ def redirect_view(request, org_slug, slug):
     # Cache for future
     set_cached_redirect(org_slug, slug, short.original_url)
 
-    return redirect(short.original_url)
+    return redirect("google.com")
+
+
+class ListShortURLsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        org_slug = request.query_params.get("organization_slug")
+        if not org_slug:
+            return Response({"error": "Missing organization_slug"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            org = Organization.objects.get(slug=org_slug)
+        except Organization.DoesNotExist:
+            return Response({"error": "Organization not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        membership = Membership.objects.filter(user=request.user, organization=org).first()
+        if not membership:
+            return Response({"error": "You are not a member of this organization"}, status=status.HTTP_403_FORBIDDEN)
+
+        urls = ShortURL.objects.filter(organization=org).order_by("-created_at")[:20]
+
+        return Response([
+            {
+                "id": url.id,
+                "slug": url.slug,
+                "original_url": url.original_url,
+                "short_url": f"https://yourdomain.com/{org.slug}/{url.slug}",
+                "clicks": url.clicks,
+                "created_at": url.created_at,
+                "created_by": url.created_by.username,
+            }
+            for url in urls
+        ])
+    
+
+class ListShortURLsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        org_slug = request.query_params.get("organization_slug")
+        if not org_slug:
+            return Response({"error": "Missing organization_slug"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            org = Organization.objects.get(slug=org_slug)
+        except Organization.DoesNotExist:
+            return Response({"error": "Organization not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        membership = Membership.objects.filter(user=request.user, organization=org).first()
+        if not membership:
+            return Response({"error": "You are not a member of this organization"}, status=status.HTTP_403_FORBIDDEN)
+
+        urls = ShortURL.objects.filter(organization=org).order_by("-created_at")[:20]
+
+        return Response([
+            {
+                "id": url.id,
+                "slug": url.slug,
+                "original_url": url.original_url,
+                "short_url": f"http://localhost:5173/{org.slug}/{url.slug}",
+                "clicks": url.clicks,
+                "created_at": url.created_at,
+                "created_by": url.created_by.username,
+            }
+            for url in urls
+        ])
+    
+class DeleteShortURLView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        try:
+            short_url = ShortURL.objects.get(pk=pk)
+        except ShortURL.DoesNotExist:
+            return Response({"error": "Short URL not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        membership = Membership.objects.filter(user=request.user, organization=short_url.organization).first()
+        if not membership:
+            return Response({"error": "You are not allowed to delete this URL"}, status=status.HTTP_403_FORBIDDEN)
+
+        short_url.delete()
+        return Response({"message": "Short URL deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    
+
+
+
+
+class ResolveShortURLView(APIView):
+    def get(self, request):
+        org_slug = request.query_params.get("organization_slug")
+        slug = request.query_params.get("slug")
+
+        if not org_slug or not slug:
+            return Response({"error": "Missing parameters"}, status=400)
+
+        org = get_object_or_404(Organization, slug=org_slug)
+        short = get_object_or_404(ShortURL, organization=org, slug=slug)
+
+        return Response({
+            "original_url": short.original_url,
+            "clicks": short.clicks,
+            "created_by": short.created_by.username,
+        })

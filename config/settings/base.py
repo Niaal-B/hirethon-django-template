@@ -90,6 +90,7 @@ LOCAL_APPS = [
     'hirethon_template.dashboard',
     'hirethon_template.Organization',
     'hirethon_template.shortner',
+    'hirethon_template.invitation'
 
 
     # Your stuff: custom apps go here
