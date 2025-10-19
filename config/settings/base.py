@@ -82,6 +82,7 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
     "dj_rest_auth",
     "dj_rest_auth.registration",
+    'django_redis',
 ]
 
 LOCAL_APPS = [
