@@ -8,7 +8,7 @@ class DashboardView(APIView):
 
     def get(self, request):
         user = request.user
-        memberships = Membership.objects.filter(user=user).select_related('organization')
+        memberships = Membership.objects.filter(user=user,role='admin').select_related('organization')
 
         orgs = [
             {

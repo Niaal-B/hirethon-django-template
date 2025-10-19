@@ -28,3 +28,21 @@ class CreateOrganizationView(APIView):
             'role': 'admin',
             'joined_at': org.created_at,
         }, status=status.HTTP_201_CREATED)
+
+
+class MemberOrganizationsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        memberships = Membership.objects.filter(user=request.user).exclude(role='admin')
+        data = [
+            {
+                'id': m.organization.id,
+                'name': m.organization.name,
+                'slug': m.organization.slug,
+                'role': m.role,
+                'joined_at': m.joined_at,
+            }
+            for m in memberships
+        ]
+        return Response({'organizations': data}, status=status.HTTP_200_OK)
